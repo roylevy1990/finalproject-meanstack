@@ -6,5 +6,5 @@ export class User{
   public username: string;
   public password: string;
   public avatar: string;
-  public friends_list: Array<User>;
+  public friends_list: Array<any>;
 }

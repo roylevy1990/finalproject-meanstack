@@ -47,6 +47,21 @@ user.avatar = url;
       return res.json();
     });
   }
+getMembers(){
+  return this.http.get('http://localhost:3000/api/members')
+      .map(function(res) {
+        return res.json();
+      });
+}
 
+addFriend(friendUsername){
+  console.log("adding "+friendUsername);
+   let headers = new Headers();
+ headers.append('Content-Type', 'application/json');
+  return this.http.post('http://localhost:3000/api/addFriend/'+friendUsername,this.user, {headers: headers})
+  .map(function(res){
+    return res.json();
+  });
+}
 
 }

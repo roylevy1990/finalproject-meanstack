@@ -1,3 +1,18 @@
-<p>
-  members works!
-</p>
+<div class="container">
+
+    <div class="panel panel-default friends">
+        <div class="panel-heading">
+            <h2 class="header">Members</h2>
+        </div>
+        <div class="panel-body">
+            <ul>
+                <li *ngFor="let user of users">
+                    <span>{{user.first_name}} {{user.last_name}}</span>
+                    <a href="profile.html" class="thumbnail"><img src={{user.avatar}} alt=""></a>
+                    <button (click)="addFriend(user.first_name)" class="btn btn-primary">Add friend</button>
+                </li>
+            </ul>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</div>

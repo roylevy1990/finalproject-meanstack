@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const fs = require('fs');
+const post = require('../models/post');
 const UserSchema = mongoose.Schema({
     first_name: {
         type: String,
@@ -12,11 +13,13 @@ const UserSchema = mongoose.Schema({
     },
     username: {
         type: String,
-        required: true
+        required: true,
+        index: { unique: true, dropDups: true }
     },
     email: {
         type: String,
-        required: true
+        required: true,
+        index: { unique: true, dropDups: true }
     },
     password: {
         type: String,
@@ -25,17 +28,48 @@ const UserSchema = mongoose.Schema({
     avatar: {
         type: String
     },
-    friends_list: []
+    friends_list: {
+        type: Array
+    },
+    posts: [post]
+
 });
 
 // mongodb://localhost:27017/contactlist
 const User = module.exports = mongoose.model('User', UserSchema);
 
 module.exports.updateAvatar = function(username, url, callback) {
-    User.findOneAndUpdate({ username: username }, { $set: { avatar: url } }, { new: true }, callback);
+    console.log('user name is ' + username + ' url is' + url);
+    User.findOneAndUpdate({ username: username }, { $set: { avatar: url } }, { new: true, upsert: true }, callback);
 }
 
+// this function gets the user that adds the friend, and the friend 
+module.exports.addFriend = function(user, friendUsername, callback) {
+    for (var i = 0; i < user.friends_list.length; i++) {
+        if (user.friends_list[i] == friendUsername) {
+            console.log('user already added as friend');
+            err = new Error('user already added as friend');
+            callback(err, null);
+        }
+    }
+    var update = { $push: { 'friends_list': friendUsername } };
+    User.findOneAndUpdate({ username: user.username }, update, { new: true, upsert: true }, callback);
 
+}
+
+module.exports.getAllMembers = function(username, callback) {
+    User.find(function(err, members) {
+        for (var i = 0; i < members.length; i++) {
+            if (members[i].username == username)
+                console.log('index of member is ' + i);
+        }
+        callback(null, members);
+
+    })
+}
+module.exports.getMembersWithouFriends = function(user, callback) {
+
+}
 
 module.exports.getUserById = function(id, callback) {
     User.findById(id, callback);
