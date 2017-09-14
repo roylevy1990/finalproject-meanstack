@@ -13,6 +13,10 @@
     width: 150px !important;
 }
 
+.img {
+    height: 143px;
+}
+
 .panel-default {
     border-color: #ddd;
 }

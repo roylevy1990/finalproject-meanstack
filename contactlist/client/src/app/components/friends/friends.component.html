@@ -1,40 +1,18 @@
-<div class="col-md-4" *ngIf="isLogged">
+<div class="col-md-4">
     <div class="panel panel-default friends">
         <div class="panel-heading">
             <h3 class="panel-title">My Friends</h3>
         </div>
         <div class="panel-body">
             <ul>
-                <li>
-                    <a href="profile.html" class="thumbnail"><img [src]="defaultImg" alt=""></a>
-                </li>
-                <li>
-                    <a href="profile.html" class="thumbnail"><img [src]="defaultImg" alt=""></a>
-                </li>
-                <li>
-                    <a href="profile.html" class="thumbnail"><img [src]="defaultImg" alt=""></a>
-                </li>
-                <li>
-                    <a href="profile.html" class="thumbnail"><img [src]="defaultImg" alt=""></a>
-                </li>
-                <li>
-                    <a href="profile.html" class="thumbnail"><img [src]="defaultImg" alt=""></a>
-                </li>
-                <li>
-                    <a href="profile.html" class="thumbnail"><img [src]="defaultImg" alt=""></a>
-                </li>
-                <li>
-                    <a href="profile.html" class="thumbnail"><img [src]="defaultImg" alt=""></a>
-                </li>
-                <li>
-                    <a href="profile.html" class="thumbnail"><img [src]="defaultImg" alt=""></a>
-                </li>
-                <li>
-                    <a href="profile.html" class="thumbnail"><img [src]="defaultImg" alt=""></a>
+                <li *ngFor="let friend of friends | slice:0:10 ">
+                    <span>{{friend.first_name}} {{friend.last_name}}</span>
+                    <a href="profile.html" class="thumbnail"><img style="height:143px; width: 145px;" src={{friend.avatar}} alt=""></a>
                 </li>
             </ul>
+
             <div class="clearfix"></div>
-            <a class="btn btn-primary" href="#">View All Friends</a>
+            <a class="btn btn-primary pull-right" href="#">View All Friends</a>
         </div>
     </div>
     <!-- <div class="panel panel-default groups">

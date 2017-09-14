@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const fs = require('fs');
-const post = require('../models/post');
+const Post = require('../models/post');
+
 const UserSchema = mongoose.Schema({
     first_name: {
         type: String,
@@ -28,10 +29,9 @@ const UserSchema = mongoose.Schema({
     avatar: {
         type: String
     },
-    friends_list: {
-        type: Array
-    },
-    posts: [post]
+    friends_list: [String],
+
+    posts: [{ type: mongoose.Schema.ObjectId, ref: 'Post' }]
 
 });
 
@@ -48,8 +48,9 @@ module.exports.addFriend = function(user, friendUsername, callback) {
     for (var i = 0; i < user.friends_list.length; i++) {
         if (user.friends_list[i] == friendUsername) {
             console.log('user already added as friend');
-            err = new Error('user already added as friend');
-            callback(err, null);
+            // err = new Error('user already added as friend');
+            // callback(err, null);
+            return;
         }
     }
     var update = { $push: { 'friends_list': friendUsername } };
@@ -57,18 +58,24 @@ module.exports.addFriend = function(user, friendUsername, callback) {
 
 }
 
-module.exports.getAllMembers = function(username, callback) {
-    User.find(function(err, members) {
-        for (var i = 0; i < members.length; i++) {
-            if (members[i].username == username)
-                console.log('index of member is ' + i);
-        }
-        callback(null, members);
+module.exports.addPost = (post, callback) => {
+    var update = { $push: { 'posts': post } };
+    User.findOneAndUpdate({ username: post.author }, update, { new: true, upsert: true }, callback);
+};
 
-    })
-}
+
+// module.exports.addPost = (post, callback) => {
+//     User.findOne({ username: post.author }, update, { new: true, upsert: true }, callback);
+// };
+
+
+
 module.exports.getMembersWithouFriends = function(user, callback) {
+    User.find({ username: { $nin: user.friends_list } }, callback)
+}
 
+module.exports.getFriendsList = function(user, callback) {
+    User.find({ username: user.friends_list }, callback);
 }
 
 module.exports.getUserById = function(id, callback) {
@@ -96,3 +103,14 @@ module.exports.comparePassword = function(candidatePassword, hash, callback) {
         callback(null, isMatch);
     });
 }
+
+// module.exports.getAllMembers = function(username, callback) {
+//     User.find(function(err, members) {
+//         for (var i = 0; i < members.length; i++) {
+//             if (members[i].username == username)
+//                 console.log('index of member is ' + i);
+//         }
+//         callback(null, members);
+
+//     })
+// }

@@ -1,2 +1,49 @@
-<h2 class="page-header">Dashboard</h2>
-<p>Welcome to your Dashboard</p>
+<div class="col-md-8">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Wall</h3>
+        </div>
+        <div class="panel-body">
+            <form (submit)="addPost()">
+                <div class="form-group">
+                    <textarea class="form-control" [(ngModel)]="content" name='content' placeholder="Write on the wall"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary pull-right" value="Post"> <fa name="pencil-square-o"></fa>Write</button>
+                <div class="pull-right">
+                    <div class="btn-toolbar">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div *ngIf='posts'>
+        <div *ngFor='let post of posts | slice:0:20' class="panel panel-default post">
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-sm-2">
+                        <a href="profile.html" class="post-avatar thumbnail"><img [src]='sanitize(post.userImg)'>
+                            <div class="text-center">{{post.author}}</div>
+                        </a>
+                        <div class="likes text-center">
+                            <fa name="thumbs-o-up"></fa>{{post.likes.length}}</div>
+                    </div>
+                    <div class="col-sm-10">
+                        <div class="bubble">
+                            <div class="pointer">
+                                <p>{{post.content}}</p>
+                            </div>
+                            <div class="pointer-border"></div>
+                        </div>
+                        <p class="post-actions"><a>Comment</a> - <a (click)="likePost(post._id)">Like</a></p>
+
+                        <div class="clearfix"></div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<app-friends></app-friends>

@@ -12,6 +12,9 @@ var firebase = require("firebase");
 // models
 const Contact = require('../models/contacts');
 const User = require('../models/user');
+const Post = require('../models/post');
+// date
+const dateTime = require('node-datetime');
 
 
 
@@ -47,9 +50,10 @@ router.post('/register', (function(req, res, next) {
     });
 }));
 
-router.post('/addImage', function(req, res, next) {
 
-});
+
+// create new Post
+
 
 router.post('/updateAvatar', (function(req, res, next) {
 
@@ -68,10 +72,6 @@ router.post('/updateAvatar', (function(req, res, next) {
     }
 
 ));
-
-router.post('/addFriend', function(req, res, next) {
-
-});
 
 // Authentication
 router.post('/authenticate', (function(req, res, next) {
@@ -120,37 +120,155 @@ router.post('/authenticate', (function(req, res, next) {
     });
 }));
 
-// retrieving all members
-router.get('/members', function(req, res, next) {
-    User.find(function(err, members) {
-        res.json(members);
-    })
-});
-
-router.get('/membersWithoutFriends', function(req, res, next) {
-    User.getMembers(user, function(err, members) {
-        if (err) throw err;
-        if (!members) return res.json({ success: false, msg: 'No members found' });
-        res.json({ success: true, members: members });
-    })
-});
-
-
-// router.get('/members2/:username', function(req, res, next) {
-//     const username = req.params.username;
-//     console.log(username);
-//     User.getAllMembers(username, function(err, members) {
-//         if (err) {
-//             throw err;
-//         }
-//         if (!members) {
-//             return res.json({ success: false, msg: 'No members found', });
-//         } else {
-//             return res.json({ success: true, msg: 'Displaying members', members: members });
-//         }
-//     });
-
+// // retrieving all members
+// router.get('/members', function(req, res, next) {
+//     User.find(function(err, members) {
+//         res.json(members);
+//     })
 // });
+
+router.post('/addPost', function(req, res, next) {
+    var dt = dateTime.create();
+    var formatted = dt.format('d/m/Y H:M:S');
+    let newPost = new Post({
+        author: req.body.author,
+        content: req.body.content,
+        userImg: req.body.avatar,
+        date: formatted
+    });
+    Post.addPost(newPost, function(err, post) {
+        if (err) {
+            return err
+        } else {
+            User.addPost(newPost, function(err, post) {
+                if (err) {
+                    res.json({ success: false, msg: 'Failed to add post (user model)' });
+                } else {
+                    res.json({ success: true, msg: 'post was added to the user model posts[]' });
+                }
+            })
+        }
+    })
+})
+
+router.post('/likePost/:id', function(req, res, next) {
+    var id = req.params.id;
+    var username = req.body.username;
+    Post.likePost(id, username, function(err, result) {
+        if (err) {
+            res.json(err);
+        } else {
+            res.json({ success: true, msg: 'post was liked by ' + username });
+        }
+    });
+})
+
+router.get('/friendsPosts/:username', function(req, res, next) {
+    var username = req.params.username;
+    const user = User.getUserByUsername(username, function(err, user) {
+        if (err) {
+            throw err;
+        }
+        if (!user) {
+            return res.json({ success: false, msg: 'User not found' });
+        }
+        Post.getAllFriendsPosts(user, function(err, posts) {
+            if (err) {
+                throw err;
+            }
+            if (!posts) {
+                return res.json({ success: false, msg: 'no posts found' });
+            }
+            return res.json({ success: true, posts: posts.reverse() })
+        })
+    })
+})
+router.get('/myPosts/:username', function(req, res, next) {
+    const username = req.params.username;
+
+    const user = User.getUserByUsername(username, function(err, user) {
+        if (err) {
+            throw err;
+        }
+        if (!user) {
+            return res.json({ success: false, msg: 'User not found' });
+        }
+        Post.find({ _id: user.posts }, function(err, posts) {
+            if (err) {
+                throw err;
+            }
+            if (!posts) {
+                return res.json({ success: false, msg: 'No Posts found' })
+            }
+            return res.json({ success: true, posts: posts.reverse() })
+
+        })
+
+    })
+});
+
+router.delete('/myPosts/:id', function(req, res, next) {
+    User.remove({ _id: req.params.id }, function(err, result) {
+        if (err) {
+            throw err;
+        }
+        Post.remove({ _id: req.params.id }, function(err, result) {
+            if (err) {
+                res.json(err);
+            } else {
+                res.json(result);
+            }
+
+        });
+    });
+});
+
+router.get('/members/:username', function(req, res, next) {
+    const username = req.params.username; // to this username we add the friend
+
+    const user = User.getUserByUsername(username, function(err, user) {
+        if (err) {
+            throw err;
+        }
+        if (!user) {
+            return res.json({ success: false, msg: 'User not found' });
+        }
+        User.getMembersWithouFriends(user, function(err, members) {
+            if (err) {
+                return err
+            }
+            if (!members) {
+                return res.json({ success: false, msg: 'no members found !' });
+            }
+            return res.json({ success: true, members: members });
+
+        });
+    });
+
+});
+
+router.get('/friendsList/:username', function(req, res, next) {
+    const username = req.params.username; // to this username we add the friend
+    const user = User.getUserByUsername(username, function(err, user) {
+        if (err) {
+            throw err;
+        }
+        if (!user) {
+            return res.json({ success: false, msg: 'User not found' });
+        }
+        User.getFriendsList(user, function(err, friendsList) {
+            if (err) {
+                return err
+            }
+            if (!friendsList) {
+                return res.json({ success: false, msg: 'no friends you loser !' });
+            }
+            return res.json({ success: true, friendsList: friendsList });
+
+        });
+    });
+
+});
 // Profile
 // if we want to protect a route we pass the following line as the SECOND PARAMATER
 // passport.authenticate('JWT', {session: false})
@@ -165,7 +283,7 @@ router.post('/addFriend/:friendUsername', function(req, res, next) {
 
     User.addFriend(user, friendUsername, function(err, flag) {
         if (err) {
-            console.log(err);
+            throw (err);
         }
         if (!flag) {
             res.json({ success: false, msg: 'Friend is already on friends list' });
@@ -174,6 +292,8 @@ router.post('/addFriend/:friendUsername', function(req, res, next) {
     res.json({ success: true, msg: 'user was added to friends list' });
 
 });
+
+router.get
 
 module.exports = router;
 
