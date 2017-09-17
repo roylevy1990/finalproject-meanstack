@@ -30,7 +30,9 @@ module.exports.addPost = (post, callback) => {
 };
 
 module.exports.likePost = (postID, username, callback) => {
-    var update = { $push: { 'likes': username } };
+    // check if user liked already()
+
+    var update = { $addToSet: { 'likes': username } };
     Post.findByIdAndUpdate(postID, update, { new: true, upsert: true }, callback)
 }
 module.exports.getAllFriendsPosts = (user, callback) => {

@@ -51,7 +51,6 @@ router.post('/register', (function(req, res, next) {
 }));
 
 
-
 // create new Post
 
 
@@ -183,6 +182,20 @@ router.get('/friendsPosts/:username', function(req, res, next) {
         })
     })
 })
+
+router.get('/friend/:username', function(req, res, next) {
+    var username = req.params.username;
+    const user = User.getUserByUsername(username, function(err, user) {
+        if (err) {
+            throw err;
+        }
+        if (!user) {
+            return res.json({ success: false, msg: 'User not found' });
+        }
+        return res.json({ success: true, user: user });
+    })
+})
+
 router.get('/myPosts/:username', function(req, res, next) {
     const username = req.params.username;
 

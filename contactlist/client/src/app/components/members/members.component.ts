@@ -3,6 +3,7 @@ import {UserService} from '../../services/userService/user.service';
 import {AuthService} from '../../services/authService/auth.service';
 
 import {User} from '../../objects/user';
+
 @Component({
   selector: 'app-members',
   templateUrl: './members.component.html',

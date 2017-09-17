@@ -39,6 +39,15 @@ uploadToFirebase(event, username): firebase.Promise<any> {
 
 }
 
+getFriendsProfile(username) {
+  const headers = new Headers();
+  headers.append('Content-Type', 'application/json');
+   return this.http.get(`http://localhost:3000/api/friend/${username}`, {headers: headers})
+       .map(function(res) {
+         return res.json();
+      });
+}
+
 updateAvatarInDb(user, url) {
 user.avatar = url;
  const headers = new Headers();
@@ -47,13 +56,8 @@ user.avatar = url;
  .map(function(res){
       return res.json();
     });
-  }
-// getMembers(){
-//   return this.http.get('http://localhost:3000/api/members')
-//       .map(function(res) {
-//         return res.json();
-//       });
-// }
+}
+
 getMembers(user) {
      const headers = new Headers();
  headers.append('Content-Type', 'application/json');

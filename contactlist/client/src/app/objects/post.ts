@@ -3,4 +3,5 @@ export class Post {
     public author: string;
     public content: string;
     public date: string;
+    public userImg: string;
 }

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {AuthService} from '../../services/authService/auth.service';
 import {UserService} from '../../services/userService/user.service';
-
+import {Router} from '@angular/router';
 import {User} from '../../objects/user';
 @Component({
   selector: 'app-friends',
@@ -24,7 +24,8 @@ export class FriendsComponent implements OnInit {
        // getProfile
         this.authService.getProfile().subscribe(profile => {
         this.user = profile.user;
-        this.userService.getFriendsList(this.user).subscribe(friends => {this.friends = friends.friendsList; }
+        this.userService.getFriendsList(this.user).subscribe(friends => {this.friends = friends.friendsList;
+          Array.from(new Set(this.friends)); }
         ); },
   err => {
     console.log(err);

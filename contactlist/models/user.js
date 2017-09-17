@@ -45,15 +45,17 @@ module.exports.updateAvatar = function(username, url, callback) {
 
 // this function gets the user that adds the friend, and the friend 
 module.exports.addFriend = function(user, friendUsername, callback) {
-    for (var i = 0; i < user.friends_list.length; i++) {
-        if (user.friends_list[i] == friendUsername) {
-            console.log('user already added as friend');
-            // err = new Error('user already added as friend');
-            // callback(err, null);
-            return;
-        }
-    }
-    var update = { $push: { 'friends_list': friendUsername } };
+    // for (var i = 0; i < user.friends_list.length; i++) {
+    //     if (user.friends_list[i] == friendUsername) {
+    //         console.log('user already added as friend');
+    //         // err = new Error('user already added as friend');
+    //         // callback(err, null);
+    //         return;
+    //     }
+    // }
+    //     var update = { $addToSet: { 'likes': username } };
+
+    var update = { $addToSet: { 'friends_list': friendUsername } };
     User.findOneAndUpdate({ username: user.username }, update, { new: true, upsert: true }, callback);
 
 }

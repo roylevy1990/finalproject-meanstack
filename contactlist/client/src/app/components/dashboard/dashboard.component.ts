@@ -15,7 +15,6 @@ import 'rxjs/add/operator/map';
 export class DashboardComponent implements OnInit {
   user: User;
   posts: [String];
-  userImgs: [any];
   content: String;
   constructor(
     private userService: UserService,
@@ -27,7 +26,7 @@ export class DashboardComponent implements OnInit {
      // getProfile
      this.authService.getProfile().subscribe(profile => {
       this.user = profile.user;
-      this.userService.getFriendsPosts(this.user).subscribe(posts => this.posts = posts.posts);
+      this.userService.getFriendsPosts(this.user).subscribe((posts) => this.posts = posts.posts);
   },
 err => {
   console.log(err);
@@ -39,7 +38,8 @@ err => {
   }
   likePost(id) {
     this.userService.likePost(id).subscribe(res => {});
-    this.userService.getFriendsPosts(this.user).subscribe(posts => this.posts = posts.posts);
+    this.userService.getFriendsPosts(this.user).subscribe((posts) => this.posts = posts.posts);
+    // (users) => this.users = users.members);
   }
   addPost() {
     const post = {

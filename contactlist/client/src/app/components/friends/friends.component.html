@@ -7,7 +7,7 @@
             <ul>
                 <li *ngFor="let friend of friends | slice:0:10 ">
                     <span>{{friend.first_name}} {{friend.last_name}}</span>
-                    <a href="profile.html" class="thumbnail"><img style="height:143px; width: 145px;" src={{friend.avatar}} alt=""></a>
+                    <a [routerLink]="['/friend', friend.username]" class="thumbnail"><img style="height:143px; width: 145px;" src={{friend.avatar}} alt=""></a>
                 </li>
             </ul>
 

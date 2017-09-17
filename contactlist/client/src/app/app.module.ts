@@ -22,6 +22,7 @@ import {AuthGuard} from './guards/auth.guard';
 import {User} from './objects/user';
 import { AngularFontAwesomeModule } from 'angular-font-awesome/angular-font-awesome';
 import * as firebase from 'firebase';
+import { FriendprofileComponent } from './components/friendprofile/friendprofile.component';
 export const firebaseConfig = {
  apiKey: 'AIzaSyBtY-1xi8vOI6RjS5-6F4jan1PABcX8rUw',
  authDomain: 'dobble-e1c3e.firebaseapp.com',
@@ -39,8 +40,9 @@ const routes: Routes = [
   {path: 'login', component: LoginComponent},
   {path: 'profile', component: ProfileComponent, canActivate: [AuthGuard]},
   {path: 'friends', component: FriendsComponent, canActivate: [AuthGuard]},
-  {path: 'members', component: MembersComponent},
-  {path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard]}
+  {path: 'members', component: MembersComponent, canActivate: [AuthGuard]},
+  {path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard]},
+  {path: 'friend/:username', component: FriendprofileComponent, canActivate: [AuthGuard]}
 ];
 @NgModule({
   declarations: [
@@ -53,7 +55,8 @@ const routes: Routes = [
     RegisterComponent,
     LoginComponent,
     DashboardComponent,
-    FriendsComponent
+    FriendsComponent,
+    FriendprofileComponent
   ],
   imports: [
     BrowserModule,

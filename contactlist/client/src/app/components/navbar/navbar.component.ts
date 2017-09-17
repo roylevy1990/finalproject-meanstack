@@ -8,11 +8,10 @@ import {FlashMessagesService} from 'angular2-flash-messages';
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent implements OnInit {
-  imgLogo = "../../assets/imgs/logo.png";
+  imgLogo = '../../assets/imgs/logo.png';
 
   signIn = function(username, password){
-    
-  }
+  };
   constructor(
     private authService: AuthService,
     private router: Router,
@@ -22,11 +21,11 @@ export class NavbarComponent implements OnInit {
   ngOnInit() {
   }
 
-  onLogoutClick(){
+  onLogoutClick() {
     this.authService.logout();
     this.flashMessage.show('Bye bye ... you are now logged out', {
-      cssClass:'alert-success text-center',
-      timeout:3000
+      cssClass: 'alert-success text-center',
+      timeout: 3000
   });
     this.router.navigate(['/login']);
     return false;
