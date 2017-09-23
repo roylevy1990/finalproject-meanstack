@@ -23,6 +23,8 @@ import {User} from './objects/user';
 import { AngularFontAwesomeModule } from 'angular-font-awesome/angular-font-awesome';
 import * as firebase from 'firebase';
 import { FriendprofileComponent } from './components/friendprofile/friendprofile.component';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {MdTooltipModule} from '@angular/material';
 export const firebaseConfig = {
  apiKey: 'AIzaSyBtY-1xi8vOI6RjS5-6F4jan1PABcX8rUw',
  authDomain: 'dobble-e1c3e.firebaseapp.com',
@@ -56,7 +58,7 @@ const routes: Routes = [
     LoginComponent,
     DashboardComponent,
     FriendsComponent,
-    FriendprofileComponent
+    FriendprofileComponent,
   ],
   imports: [
     BrowserModule,
@@ -66,6 +68,8 @@ const routes: Routes = [
     FlashMessagesModule,
     AngularFireModule.initializeApp(firebaseConfig),
     AngularFontAwesomeModule,
+    BrowserAnimationsModule,
+    MdTooltipModule,
   ],
   providers: [ValidateService, AuthService, UserService, AuthGuard, User],
   bootstrap: [AppComponent]

@@ -119,12 +119,6 @@ router.post('/authenticate', (function(req, res, next) {
     });
 }));
 
-// // retrieving all members
-// router.get('/members', function(req, res, next) {
-//     User.find(function(err, members) {
-//         res.json(members);
-//     })
-// });
 
 router.post('/addPost', function(req, res, next) {
     var dt = dateTime.create();
